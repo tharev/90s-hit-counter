@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>90s Hit Counter - Visitor Counter</title>
+      <style>
+                * {
+                              margin: 0;
+                              padding: 0;
+                              box-sizing: border-box;
+                }
+
+                body {
+                              font-family: 'Comic Sans MS', cursive;
+                              background: #000;
+                              color: #00ff00;
+                              overflow-x: hidden;
+                              position: relative;
+                }
+
+                /* Starfield Background */
+                #starfield {
+                              position: fixed;
+                              top: 0;
+                              left: 0;
+                              width: 100%;
+                              height: 100%;
+                              z-index: 0;
+                }
+
+                .star {
+                              position: absolute;
+                              background: white;
+                              border-radius: 50%;
+                              animation: twinkle 3s infinite;
+                }
+
+                @keyframes twinkle {
+                              0%, 100% { opacity: 0.3; }
+                              50% { opacity: 1; }
+                }
+
+                /* Main Container */
+                .container {
+                              position: relative;
+                              z-index: 1;
+                              max-width: 900px;
+                              margin: 0 auto;
+                              padding: 20px;
+                              min-height: 100vh;
+                }
+
+                /* Header */
+                header {
+                              text-align: center;
+                              margin-bottom: 40px;
+                              padding: 30px 20px;
+                              background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00, #ff00ff);
+                              background-size: 400% 400%;
+                              animation: gradient 3s ease infinite;
+                              border: 5px solid #fff;
+                              box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+                }
+
+                @keyframes gradient {
+                              0%, 100% { background-position: 0% 50%; }
+                              50% { background-position: 100% 50%; }
+                }
+
+                h1 {
+                              font-size: 3em;
+                              text-shadow: 3px 3px 0 #000, -1px -1px 0 #fff;
+                              margin-bottom: 10px;
+                              animation: float 3s ease-in-out infinite;
+                }
+
+                @keyframes float {
+                              0%, 100% { transform: translateY(0); }
+                              50% { transform: translateY(-10px); }
+                }
+
+                .subtitle {
+                              font-size: 1.2em;
+                              color: #fff;
+                              text-shadow: 2px 2px 4px #000;
+                }
+
+                /* Counter Display */
+                .counter-section {
+                              background: linear-gradient(135deg, #1a1a2e, #0f3460);
+                              border: 5px solid #00ff00;
+                              border-radius: 15px;
+                              padding: 40px;
+                              margin: 30px 0;
+                              box-shadow: 0 0 30px rgba(0, 255, 0, 0.5), inset 0 0 50px rgba(0, 0, 0, 0.5);
+                              position: relative;
+                }
+
+                .counter-display {
+                              background: #000;
+                              border: 3px solid #00ff00;
+                              padding: 30px;
+                              text-align: center;
+                              border-radius: 10px;
+                              margin-bottom: 30px;
+                              box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.3);
+                }
+
+                .counter-label {
+                              font-size: 1.5em;
+                              margin-bottom: 15px;
+                              text-transform: uppercase;
+                              letter-spacing: 3px;
+                }
+
+                .counter-value {
+                              font-size: 4em;
+                              font-family: 'Courier New', monospace;
+                              font-weight: bold;
+                              text-shadow: 0 0 10px currentColor;
+                              padding: 20px;
+                              background: rgba(0, 0, 0, 0.5);
+                              border-radius: 5px;
+                              display: inline-block;
+                              min-width: 300px;
+                }
+
+                /* Theme Selector */
+                .theme-selector {
+                              display: grid;
+                              grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                              gap: 15px;
+                              margin: 30px 0;
+                }
+
+                .theme-btn {
+                              padding: 15px 20px;
+                              font-size: 1em;
+                              font-family: 'Comic Sans MS', cursive;
+                              border: 3px solid currentColor;
+                              border-radius: 8px;
+                              cursor: pointer;
+                              transition: all 0.3s;
+                              font-weight: bold;
+                              text-transform: uppercase;
+                }
+
+                .theme-btn:hover {
+                              transform: scale(1.05);
+                              box-shadow: 0 0 20px currentColor;
+                }
+
+                .theme-btn.active {
+                              box-shadow: 0 0 30px currentColor;
+                              animation: pulse 1s infinite;
+                }
+
+                @keyframes pulse {
+                              0%, 100% { transform: scale(1); }
+                              50% { transform: scale(1.05); }
+                }
+
+                /* Control Buttons */
+                .controls {
+                              display: flex;
+                              flex-wrap: wrap;
+                              gap: 15px;
+                              justify-content: center;
+                              margin: 30px 0;
+                }
+
+                .btn {
+                              padding: 15px 30px;
+                              font-size: 1.1em;
+                              font-family: 'Comic Sans MS', cursive;
+                              background: linear-gradient(45deg, #ff00ff, #00ffff);
+                              color: #fff;
+                              border: 3px solid #fff;
+                              border-radius: 10px;
+                              cursor: pointer;
+                              transition: all 0.3s;
+                              font-weight: bold;
+                              text-transform: uppercase;
+                              box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                }
+
+                .btn:hover {
+                              transform: translateY(-3px);
+                              box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+                }
+
+                .btn:active {
+                              transform: translateY(0);
+                }
+
+                /* Share Section */
+                .share-section {
+                              background: rgba(0, 0, 0, 0.7);
+                              border: 3px solid #ffff00;
+                              border-radius: 10px;
+                              padding: 30px;
+                              margin: 30px 0;
+                }
+
+                .share-section h2 {
+                              color: #ffff00;
+                              margin-bottom: 20px;
+                              text-align: center;
+                }
+
+                .embed-code {
+                              background: #000;
+                              border: 2px solid #00ff00;
+                              padding: 15px;
+                              border-radius: 5px;
+                              font-family: 'Courier New', monospace;
+                              color: #00ff00;
+                              word-wrap: break-word;
+                              margin: 15px 0;
+                              max-height: 150px;
+                              overflow-y: auto;
+                }
+
+                /* Features List */
+                .features {
+                              background: rgba(255, 255, 255, 0.1);
+                              border: 3px solid #00ffff;
+                              border-radius: 10px;
+                              padding: 30px;
+                              margin: 30px 0;
+                }
+
+                .features h2 {
+                              color: #00ffff;
+                              margin-bottom: 20px;
+                              text-align: center;
+                }
+
+                .features ul {
+                              list-style: none;
+                              padding: 0;
+                }
+
+                .features li {
+                              padding: 10px;
+                              margin: 10px 0;
+                              background: rgba(0, 255, 255, 0.1);
+                              border-left: 5px solid #00ffff;
+                              border-radius: 5px;
+                }
+
+                .features li:before {
+                              content: "★ ";
+                              color: #ffff00;
+                              margin-right: 10px;
+                }
+
+                /* Footer */
+                footer {
+                              text-align: center;
+                              padding: 30px;
+                              margin-top: 50px;
+                              border-top: 3px solid #00ff00;
+                              color: #00ff00;
+                }
+
+                footer img {
+                              width: 88px;
+                              height: 31px;
+                              margin: 5px;
+                }
+
+                /* Themes */
+                .theme-classic {
+                              --counter-color: #00ff00;
+                              --bg-primary: #000;
+                              --bg-secondary: #0f3460;
+                }
+
+                .theme-neon {
+                              --counter-color: #ff00ff;
+                              --bg-primary: #000;
+                              --bg-secondary: #1a0033;
+                }
+
+                .theme-matrix {
+                              --counter-color: #00ff00;
+                              --bg-primary: #000;
+                              --bg-secondary: #001a00;
+                }
+
+                .theme-rainbow {
+                              --counter-color: #ffff00;
+                              --bg-primary: #000;
+                              --bg-secondary: #330033;
+                }
+
+                /* Responsive */
+                @media (max-width: 768px) {
+                              h1 {
+                                                font-size: 2em;
+                              }
+
+                              .counter-value {
+                                                font-size: 2.5em;
+                                                min-width: 200px;
+                              }
+
+                              .theme-selector {
+                                                grid-template-columns: 1fr 1fr;
+                              }
+
+                              .controls {
+                                                flex-direction: column;
+                              }
+
+                              .btn {
+                                                width: 100%;
+                              }
+                }
+
+                /* CRT Effect */
+                .crt-effect {
+                              pointer-events: none;
+                              position: fixed;
+                              top: 0;
+                              left: 0;
+                              width: 100%;
+                              height: 100%;
+                              z-index: 9999;
+                              background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+                              background-size: 100% 4px;
+                              animation: crt-scan 8s linear infinite;
+                }
+
+                @keyframes crt-scan {
+                              0% { transform: translateY(0); }
+                              100% { transform: translateY(4px); }
+                }
+
+                /* Toast Notification */
+                .toast {
+                              position: fixed;
+                              bottom: 30px;
+                              right: 30px;
+                              background: #00ff00;
+                              color: #000;
+                              padding: 20px 30px;
+                              border-radius: 10px;
+                              box-shadow: 0 5px 20px rgba(0, 255, 0, 0.5);
+                              font-weight: bold;
+                              z-index: 10000;
+                              animation: slideIn 0.5s, slideOut 0.5s 2.5s;
+                }
+
+                @keyframes slideIn {
+                              from {
+                                                transform: translateX(400px);
+                                                opacity: 0;
+                              }
+                              to {
+                                                transform: translateX(0);
+                                                opacity: 1;
+                              }
+                }
+
+                @keyframes slideOut {
+                              from {
+                                                transform: translateX(0);
+                                                opacity: 1;
+                              }
+                              to {
+                                                transform: translateX(400px);
+                                                opacity: 0;
+                              }
+                }
+            </style>
+  </head>
+  <body class="theme-classic">
+        <!-- Starfield -->
+        <canvas id="starfield"></canvas>canvas>
+
+        <!-- CRT Effect -->
+        <div class="crt-effect"></div>div>
+
+        <!-- Main Container -->
+        <div class="container">
+                  <header>
+                                <h1>🔢 90s HIT COUNTER 🔢</h1>
+                              <p class="subtitle">Welcome to the WORLD WIDE WEB!</p>p>
+                  </header>
+        
+                <div class="counter-section">
+                            <div class="counter-display">
+                                            <div class="counter-label">You Are Visitor Number:</div>div>
+                                            <div class="counter-value" id="counterDisplay">000000</div>div>
+                            </div>div>
+                
+                            <h3 style="text-align: center; margin-bottom: 20px;">Choose Your Style:</h3>
+                            <div class="theme-selector">
+                                            <button class="theme-btn active" data-theme="classic" style="background: #000; color: #00ff00;">
+                                                                Classic Green
+                                            </button>button>
+                                            <button class="theme-btn" data-theme="neon" style="background: #000; color: #ff00ff;">
+                                                                Neon Pink
+                                            </button>button>
+                                            <button class="theme-btn" data-theme="matrix" style="background: #000; color: #00ff00;">
+                                                                Matrix Code
+                                            </button>button>
+                                            <button class="theme-btn" data-theme="rainbow" style="background: #000; color: #ffff00;">
+                                                                Rainbow Power
+                                            </button>button>
+                            </div>div>
+                
+                            <div class="controls">
+                                            <button class="btn" id="incrementBtn">Click Me! (+1)</button>button>
+                                            <button class="btn" id="resetBtn">Reset Counter</button>button>
+                                            <button class="btn" id="shareBtn">Share</button>button>
+                                            <button class="btn" id="soundBtn">🔊 Sound ON</button>button>
+                            </div>div>
+                </div>div>
+        
+                <div class="share-section">
+                            <h2>📤 Get Your Embed Code!</h2>
+                            <p style="text-align: center; margin-bottom: 15px;">
+                                Copy this code to add the counter to your website:
+                            </p>p>
+                            <div class="embed-code" id="embedCode">
+                                            &lt;iframe src="YOUR_URL_HERE" width="400" height="200" frameborder="0"&gt;&lt;/iframe&gt;
+                            </div>div>
+                            <div style="text-align: center;">
+                                            <button class="btn" id="copyEmbedBtn">Copy Code</button>button>
+                            </div>div>
+                </div>div>
+        
+                <div class="features">
+                            <h2>✨ Features</h2>
+                            <ul>
+                                              <li>Classic 90s aesthetic with modern functionality</li>
+                                            <li>4 retro color themes to match your vibe</li>
+                                            <li>8-bit sound effects (toggle on/off)</li>
+                                            <li>Counter persists using localStorage</li>
+                                            <li>Shareable embed code</li>
+                                            <li>Animated starfield background</li>
+                                            <li>CRT monitor scanline effect</li>
+                                            <li>Fully responsive design</li>
+                                            <li>No dependencies - pure vanilla JS!</li>
+                            </ul>
+                </div>div>
+        
+                <footer>
+                              <p>Made with 💖 for the nostalgic web</p>
+                            <p style="margin-top: 15px;">
+                                              <img src="data:image/gif;base64,R0lGODlhWAAfAKEAAAAAAP///wAAAAAAACH5BAEAAAIALAAAAABYABwAAAL+lI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC8fyTNf2jef6zvf+DwwKh8Si8YhMKpfMpvMJjUqn1Kr1is1qt9yu9wsOi8fksvmMTqvX7Lb7DY/L5/S6/Y7P6/f8vv8PGCg4SFhoeIiYqLjI2Oj4CBkpOUlZaXmJmam5ydnp+QkaKjpKWmp6ipqqusra6voKGys7S1tre4ubq7vL2+v7CxwsPExcbHyMnKy8zNzs/AwdLT1NXW19jZ2tvc3d7f0NHi4+Tl5ufo6err7O3u7+Dh8vP09fb3+Pn6+/z9/v/w8woMCBBAsaPIgwocKFDBs6fAgxosSJFCtavIgxo8aNHDt6/AgypMiRJEuaPIkypcqVLFu6fAkzpsyZNGvavIkzp86dPHv6/Ak0qNChRIsaPYo0qdKlTJs6fQo1qtSpVKtavYo1q9atXLt6/Qo2rNixZMuaPYs2rdq1bNu6fQs3rty5dOvavYs3r969fPv6/Qs4sODBhAsaPow4seLFjBs7fgw5suTJlCtbvow5s+bNnDt7/gw6tOjRpEubPo06terVrFu7fg07tuzZtGvbvo07t+7dvHv7/g08uPDhxIsbP448ufLlzJs7fw49uvTp1Ktbv449u/bt3Lt7/w4+vPjx5MubP48+vfr17Nu7fw8/vvz59Ovbv48/v/79/Pv7//8PYIABC0yZAAA7" alt="Netscape Now!">
+                                              <img src="data:image/gif;base64,R0lGODlhWAAfAKEAAAAAAP///wAAAAAAACH5BAEAAAIALAAAAABYABwAAAL+lI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC8fyTNf2jef6zvf+DwwKh8Si8YhMKpfMpvMJjUqn1Kr1is1qt9yu9wsOi8fksvmMTqvX7Lb7DY/L5/S6/Y7P6/f8vv8PGCg4SFhoeIiYqLjI2Oj4CBkpOUlZaXmJmam5ydnp+QkaKjpKWmp6ipqqusra6voKGys7S1tre4ubq7vL2+v7CxwsPExcbHyMnKy8zNzs/AwdLT1NXW19jZ2tvc3d7f0NHi4+Tl5ufo6err7O3u7+Dh8vP09fb3+Pn6+/z9/v/w8woMCBBAsaPIgwocKFDBs6fAgxosSJFCtavIgxo8aNHDt6/AgypMiRJEuaPIkypcqVLFu6fAkzpsyZNGvavIkzp86dPHv6/Ak0qNChRIsaPYo0qdKlTJs6fQo1qtSpVKtavYo1q9atXLt6/Qo2rNixZMuaPYs2rdq1bNu6fQs3rty5dOvavYs3r969fPv6/Qs4sODBhAsaPow4seLFjBs7fgw5suTJlCtbvow5s+bNnDt7/gw6tOjRpEubPo06terVrFu7fg07tuzZtGvbvo07t+7dvHv7/g08uPDhxIsbP448ufLlzJs7fw49uvTp1Ktbv449u/bt3Lt7/w4+vPjx5MubP48+vfr17Nu7fw8/vvz59Ovbv48/v/79/Pv7//8PYIABC0yZAAA7" alt="Best Viewed in Internet Explorer">
+                            </p>
+                              <p style="margin-top: 20px; font-size: 0.9em;">
+                                                © 2026 - Bringing back the glory days of the web!
+                              </p>
+                </footer>
+        </div>div>
+
+        <script>
+                  // Sound enabled state
+                  let soundEnabled = true;
+
+                  // Initialize counter
+                  let counter = parseInt(localStorage.getItem('hitCounter')) || 0;
+
+                  // Update display
+                  function updateDisplay() {
+                                const display = document.getElementById('counterDisplay');
+                                display.textContent = String(counter).padStart(6, '0');
+
+                                // Save to localStorage
+                                localStorage.setItem('hitCounter', counter);
+
+                                // Play sound
+                                if (soundEnabled) {
+                                                  playSound(220, 100);
+                                }
+                  }
+
+                  // Increment counter on page load
+                  counter++;
+                  updateDisplay();
+
+                  // Create starfield
+                  function createStarfield() {
+                                const canvas = document.getElementById('starfield');
+                                const ctx = canvas.getContext('2d');
+
+                                canvas.width = window.innerWidth;
+                                canvas.height = window.innerHeight;
+
+                                const stars = [];
+                                for (let i = 0; i < 200; i++) {
+                                                  stars.push({
+                                                                        x: Math.random() * canvas.width,
+                                                                        y: Math.random() * canvas.height,
+                                                                        radius: Math.random() * 2,
+                                                                        opacity: Math.random()
+                                                  });
+                                }
+
+                                function animate() {
+                                                  ctx.clearRect(0, 0, canvas.width, canvas.height);
+                                                  stars.forEach(star => {
+                                                                        ctx.beginPath();
+                                                                        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                                                                        ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+                                                                        ctx.fill();
+
+                                                                        star.opacity += (Math.random() - 0.5) * 0.1;
+                                                                        star.opacity = Math.max(0.1, Math.min(1, star.opacity));
+                                  });
+                                                  requestAnimationFrame(animate);
+                                }
+
+                                animate();
+
+                                window.addEventListener('resize', () => {
+                                                  canvas.width = window.innerWidth;
+                                                  canvas.height = window.innerHeight;
+                                });
+                  }
+
+                  createStarfield();
+
+                  // Sound generation using Web Audio API
+                  function playSound(frequency, duration) {
+                                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                                const oscillator = audioContext.createOscillator();
+                                const gainNode = audioContext.createGain();
+
+                                oscillator.connect(gainNode);
+                                gainNode.connect(audioContext.destination);
+
+                                oscillator.frequency.value = frequency;
+                                oscillator.type = 'square';
+
+                                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration / 1000);
+
+                                oscillator.start(audioContext.currentTime);
+                                oscillator.stop(audioContext.currentTime + duration / 1000);
+                  }
+
+                  // Theme switching
+                  document.querySelectorAll('.theme-btn').forEach(btn => {
+                                btn.addEventListener('click', () => {
+                                                  const theme = btn.dataset.theme;
+                                                  document.body.className = `theme-${theme}`;
+
+                                                  document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+                                                  btn.classList.add('active');
+
+                                                  // Update counter color based on theme
+                                                  const colors = {
+                                                                        classic: '#00ff00',
+                                                                        neon: '#ff00ff',
+                                                                        matrix: '#00ff00',
+                                                                        rainbow: '#ffff00'
+                                                  };
+                                                  document.getElementById('counterDisplay').style.color = colors[theme];
+
+                          if (soundEnabled) {
+                                                playSound(330, 50);
+                          }
+
+                                                  showToast(`Theme changed to ${theme.toUpperCase()}!`);
+                                });
+                  });
+
+                  // Increment button
+                  document.getElementById('incrementBtn').addEventListener('click', () => {
+                                counter++;
+                                updateDisplay();
+                                showToast('Counter increased! 🎉');
+                  });
+
+                  // Reset button
+                  document.getElementById('resetBtn').addEventListener('click', () => {
+                                if (confirm('Are you sure you want to reset the counter?')) {
+                                                  counter = 0;
+                                                  updateDisplay();
+                                                  showToast('Counter reset! Starting fresh! ✨');
+                                }
+                  });
+
+                  // Share button
+                  document.getElementById('shareBtn').addEventListener('click', async () => {
+                                const shareData = {
+                                                  title: '90s Hit Counter',
+                                                  text: `Check out my visitor count: ${String(counter).padStart(6, '0')}!`,
+                                                  url: window.location.href
+                                };
+
+                                try {
+                                                  if (navigator.share) {
+                                                                        await navigator.share(shareData);
+                                                                        showToast('Shared successfully! 📤');
+                                                  } else {
+                                                                        // Fallback: copy to clipboard
+                                                                        await navigator.clipboard.writeText(window.location.href);
+                                                                        showToast('Link copied to clipboard! 📋');
+                                                  }
+                                } catch (err) {
+                                                  console.error('Share failed:', err);
+                                                  showToast('Share cancelled');
+                                }
+                  });
+
+                  // Sound toggle
+                  document.getElementById('soundBtn').addEventListener('click', () => {
+                                soundEnabled = !soundEnabled;
+                                const btn = document.getElementById('soundBtn');
+                                btn.textContent = soundEnabled ? '🔊 Sound ON' : '🔇 Sound OFF';
+                                showToast(soundEnabled ? 'Sound enabled! 🔊' : 'Sound disabled 🔇');
+
+                                if (soundEnabled) {
+                                                  playSound(440, 100);
+                                  }
+                  });
+
+                  // Copy embed code
+                  document.getElementById('copyEmbedBtn').addEventListener('click', async () => {
+                                const embedCode = document.getElementById('embedCode').textContent;
+                      try {
+                                        await navigator.clipboard.writeText(embedCode);
+                                        showToast('Embed code copied! 📋');
+                                        if (soundEnabled) {
+                                                              playSound(550, 100);
+                                        }
+          } catch (err) {
+                                        showToast('Failed to copy code ❌');
+                      }
+                  });
+
+                  // Update embed code with actual URL
+                  document.getElementById('embedCode').textContent = 
+                                `<iframe src="${window.location.href}" width="400" height="200" frameborder="0"></iframe>`;
+
+                  // Toast notification
+                  function showToast(message) {
+                                const existingToast = document.querySelector('.toast');
+                                if (existingToast) {
+                                                  existingToast.remove();
+                                }
+
+                                const toast = document.createElement('div');
+                                toast.className = 'toast';
+                                toast.textContent = message;
+                                document.body.appendChild(toast);
+
+                                setTimeout(() => {
+                                                  toast.remove();
+                                }, 3000);
+                  }
+
+                  // Welcome message
+                  setTimeout(() => {
+                                showToast('Welcome to the 90s! 🎮');
+                  }, 500);
+        </script>
+  </body>body>
+</html>html>
+        </script>
+                            </p>
+                </footer></li></li>
+                            </ul></h2></h1>
+                  </header>
+      </style></title>
+  </head>
